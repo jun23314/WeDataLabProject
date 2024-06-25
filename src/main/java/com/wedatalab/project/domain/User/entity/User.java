@@ -2,6 +2,7 @@ package com.wedatalab.project.domain.User.entity;
 
 import com.wedatalab.project.domain.Board.entity.Board;
 import com.wedatalab.project.global.common.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +23,7 @@ import org.hibernate.annotations.Comment;
 public class User extends BaseEntity {
 
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -37,12 +39,11 @@ public class User extends BaseEntity {
     private String nickname;
 
     @Comment("comment relation")
-    @OneToMany
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
 
-
     @Comment("board relation for 작성자")
-    @OneToMany
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Board> boardList = new ArrayList<>();
 
     @Builder
