@@ -58,4 +58,12 @@ public class UserService {
         return UserMapper.fromUser(user);
     }
 
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+            () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
+        );
+        user.deleteUser();
+    }
+
 }

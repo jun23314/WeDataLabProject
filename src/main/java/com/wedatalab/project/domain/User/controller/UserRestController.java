@@ -51,5 +51,14 @@ public class UserRestController {
         return ResponseEntity.ok(userGetResponse);
     }
 
+    @GetMapping("/delete/{user_id}")
+    @Operation(summary = "user 삭제 API", description = "user 정보를 삭제하는 API입니다.")
+    public ResponseEntity<String> deleteUser(
+        @PathVariable("user_id") Long userId
+    ) {
+        userService.deleteUser(userId);
+        return ResponseEntity.ok("user를 성공적으로 삭제했습니다.");
+    }
+
 
 }
