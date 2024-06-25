@@ -22,7 +22,7 @@ public class UserService {
 
     @Transactional
     public void createUser(UserCreateRequest userCreateRequest) {
-        Optional<User> optionalUser = userRepository.findByNickname(userCreateRequest.user_id());
+        Optional<User> optionalUser = userRepository.findByNickname(userCreateRequest.nickname());
         if (optionalUser.isPresent()) {
             throw new AlreadyExistUserException(ErrorCode.ALREADY_EXIST_USER);
         }
