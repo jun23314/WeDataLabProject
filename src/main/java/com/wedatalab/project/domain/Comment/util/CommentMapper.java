@@ -20,7 +20,7 @@ public class CommentMapper {
 
     public static CommentGetResponse fromComment(Comment comment) {
         return CommentGetResponse.builder()
-            .userNickname(comment.getUser().getNickname())
+            .userNickname(comment.getUser().getEmail())
             .content(comment.getContent())
             .createdAt(comment.getCreatedAt())
             .build();

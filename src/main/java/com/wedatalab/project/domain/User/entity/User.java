@@ -35,9 +35,9 @@ public class User extends BaseEntity {
     @Comment("유저 나이")
     private Integer age;
 
-    @Comment("유저 nickname")
-    @Column(nullable = false, length = 20)
-    private String nickname;
+    @Comment("유저 email")
+    @Column(nullable = false, length = 50)
+    private String email;
 
     @Comment("유저 삭제 여부")
     private Boolean isDeleted = false;
@@ -51,21 +51,21 @@ public class User extends BaseEntity {
     private List<Board> boardList = new ArrayList<>();
 
     @Builder
-    public User(Long id, String name, Integer age, String nickname,
+    public User(Long id, String name, Integer age, String email,
         List<com.wedatalab.project.domain.Comment.entity.Comment> commentList,
         List<Board> boardList) {
         this.id = id;
         this.name = name;
         this.age = age;
-        this.nickname = nickname;
+        this.email = email;
         this.commentList = commentList;
         this.boardList = boardList;
     }
 
-    public void updateUser(String name, Integer age, String nickname) {
+    public void updateUser(String name, Integer age, String email) {
         this.name = name;
         this.age = age;
-        this.nickname = nickname;
+        this.email = email;
     }
 
     public void deleteUser(){
