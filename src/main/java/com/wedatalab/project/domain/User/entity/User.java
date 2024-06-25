@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -38,6 +39,9 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String nickname;
 
+    @Comment("유저 삭제 여부")
+    private Boolean isDeleted = false;
+
     @Comment("comment relation")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
@@ -62,5 +66,10 @@ public class User extends BaseEntity {
         this.name = name;
         this.age = age;
         this.nickname = nickname;
+    }
+
+    public void deleteUser(){
+        this.isDeleted = true;
+        this.delete(LocalDateTime.now());
     }
 }
