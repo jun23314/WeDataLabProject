@@ -11,7 +11,10 @@ public enum ErrorCode {
     ALREADY_EXIST_NICKNAME(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다"),
 
     //Board
-    BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "보드를 찾을 수 없습니다.")
+    BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "보드를 찾을 수 없습니다."),
+
+    //comment
+    COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "comment를 찾을 수 없습니다.")
     ;
 
     private final HttpStatus httpStatus;

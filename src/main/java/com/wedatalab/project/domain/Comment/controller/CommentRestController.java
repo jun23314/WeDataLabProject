@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -27,6 +29,16 @@ public class CommentRestController {
     ) {
         commentService.createComment(commentCreateRequest);
         return ResponseEntity.ok("코멘트 생성을 완료하였습니다.");
+    }
+
+    @PutMapping("/update")
+    @Operation(summary = "comment update API", description = "comment를 update하는 API입니다.")
+    public ResponseEntity<String> updateComment(
+        @RequestParam Long commentId,
+        @RequestParam String content
+    ) {
+        commentService.updateComment(commentId, content);
+        return ResponseEntity.ok("코멘트를 성공적으로 수정하였습니다.");
     }
 
 }

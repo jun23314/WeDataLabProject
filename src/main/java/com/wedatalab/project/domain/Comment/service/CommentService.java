@@ -5,6 +5,7 @@ import com.wedatalab.project.domain.Board.repository.BoardRepository;
 import com.wedatalab.project.domain.Comment.dto.request.CommentCreateRequest;
 import com.wedatalab.project.domain.Comment.entity.Comment;
 import com.wedatalab.project.domain.Comment.exception.BoardNotFoundException;
+import com.wedatalab.project.domain.Comment.exception.CommentNotFoundException;
 import com.wedatalab.project.domain.Comment.repository.CommentRepository;
 import com.wedatalab.project.domain.Comment.util.CommentMapper;
 import com.wedatalab.project.domain.User.entity.User;
@@ -39,6 +40,17 @@ public class CommentService {
 
         Comment comment = CommentMapper.toComment(user, board, content);
         commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void updateComment(Long commentId, String content) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+            () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND)
+        );
+
+        comment.updateComment(content);
+        commentRepository.save(comment);
+
     }
 
 }
