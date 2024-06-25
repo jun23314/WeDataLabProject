@@ -33,17 +33,19 @@ public class UserService {
 
     @Transactional
     public void updateUser(UserUpdateRequest userUpdateRequest) {
-        User tmpUser = userRepository.findById(userUpdateRequest.id()).orElseThrow(
+        String name = userUpdateRequest.name();
+        Integer age = userUpdateRequest.age();
+        String nickname = userUpdateRequest.nickname();
+
+        User user = userRepository.findById(userUpdateRequest.id()).orElseThrow(
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
 
-        String nickname = userUpdateRequest.nickname();
-        if (userRepository.findByNickname(nickname).isPresent()) {
+        if (userRepository.existsByNickname(nickname)) {
             throw new AlreadyExistNicknameException(ErrorCode.ALREADY_EXIST_NICKNAME);
         }
 
-        User user = UserMapper.toUserUpdate(userUpdateRequest);
-
+        user.updateUser(name, age, nickname);
         userRepository.save(user);
     }
 
