@@ -4,12 +4,14 @@ import com.wedatalab.project.domain.User.dto.request.UserCreateRequest;
 import com.wedatalab.project.domain.User.dto.request.UserUpdateRequest;
 import com.wedatalab.project.domain.User.dto.response.UserGetResponse;
 import com.wedatalab.project.domain.User.entity.User;
-import com.wedatalab.project.domain.User.exception.AlreadyExistNicknameException;
+import com.wedatalab.project.domain.User.exception.AlreadyExistMailException;
 import com.wedatalab.project.domain.User.exception.AlreadyExistUserException;
+import com.wedatalab.project.domain.User.exception.MemberWhoWithdrewException;
 import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.domain.User.util.UserMapper;
 import com.wedatalab.project.global.exception.ErrorCode;
+import java.lang.reflect.Member;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,8 +25,11 @@ public class UserService {
 
     @Transactional
     public void createUser(UserCreateRequest userCreateRequest) {
-        Optional<User> optionalUser = userRepository.findByNickname(userCreateRequest.nickname());
+        Optional<User> optionalUser = userRepository.findByEmail(userCreateRequest.email());
         if (optionalUser.isPresent()) {
+            if(optionalUser.get().getIsDeleted().equals(true)){
+                throw new MemberWhoWithdrewException(ErrorCode.MEMBER_WHO_WITHDREW);
+            }
             throw new AlreadyExistUserException(ErrorCode.ALREADY_EXIST_USER);
         }
 
@@ -36,26 +41,34 @@ public class UserService {
     public void updateUser(UserUpdateRequest userUpdateRequest) {
         String name = userUpdateRequest.name();
         Integer age = userUpdateRequest.age();
-        String nickname = userUpdateRequest.nickname();
+        String email = userUpdateRequest.email();
 
-        User user = userRepository.findById(userUpdateRequest.id()).orElseThrow(
+        User user = userRepository.findByIdAndIsDeletedIsFalse(userUpdateRequest.id()).orElseThrow(
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
 
-        if (userRepository.existsByNickname(nickname)) {
-            throw new AlreadyExistNicknameException(ErrorCode.ALREADY_EXIST_NICKNAME);
+        if (userRepository.existsByEmail(email)) {
+            throw new AlreadyExistMailException(ErrorCode.ALREADY_EXIST_EMAIL);
         }
 
-        user.updateUser(name, age, nickname);
+        user.updateUser(name, age, email);
         userRepository.save(user);
     }
 
     @Transactional
     public UserGetResponse getUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
         return UserMapper.fromUser(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
+            () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
+        );
+        user.deleteUser();
     }
 
 }

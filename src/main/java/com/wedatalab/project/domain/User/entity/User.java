@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -34,9 +35,12 @@ public class User extends BaseEntity {
     @Comment("유저 나이")
     private Integer age;
 
-    @Comment("유저 nickname")
-    @Column(nullable = false, length = 20)
-    private String nickname;
+    @Comment("유저 email")
+    @Column(nullable = false, length = 50)
+    private String email;
+
+    @Comment("유저 삭제 여부")
+    private Boolean isDeleted = false;
 
     @Comment("comment relation")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -47,20 +51,25 @@ public class User extends BaseEntity {
     private List<Board> boardList = new ArrayList<>();
 
     @Builder
-    public User(Long id, String name, Integer age, String nickname,
+    public User(Long id, String name, Integer age, String email,
         List<com.wedatalab.project.domain.Comment.entity.Comment> commentList,
         List<Board> boardList) {
         this.id = id;
         this.name = name;
         this.age = age;
-        this.nickname = nickname;
+        this.email = email;
         this.commentList = commentList;
         this.boardList = boardList;
     }
 
-    public void updateUser(String name, Integer age, String nickname) {
+    public void updateUser(String name, Integer age, String email) {
         this.name = name;
         this.age = age;
-        this.nickname = nickname;
+        this.email = email;
+    }
+
+    public void deleteUser(){
+        this.isDeleted = true;
+        this.delete(LocalDateTime.now());
     }
 }

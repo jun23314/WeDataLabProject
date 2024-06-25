@@ -6,7 +6,7 @@ public record UserUpdateRequest(
     Long id,
     String name,
     Integer age,
-    String nickname
+    String email
 ) {
 
     @Builder
