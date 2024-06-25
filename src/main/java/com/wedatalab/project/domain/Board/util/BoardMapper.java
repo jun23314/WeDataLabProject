@@ -16,11 +16,4 @@ public class BoardMapper {
             .build();
     }
 
-    public static Board toBoardUpdate(BoardUpdateRequest boardUpdateRequest) {
-        return Board.builder()
-            .title(boardUpdateRequest.title())
-            .content(boardUpdateRequest.content())
-            .build();
-    }
-
 }
