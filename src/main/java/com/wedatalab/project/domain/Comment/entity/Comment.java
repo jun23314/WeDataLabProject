@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 public class Comment extends BaseEntity {
 
     @Id
+    @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
