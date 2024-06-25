@@ -33,7 +33,7 @@ public class BoardService {
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
         }
 
-        Board board = boardRepository.findById(boardId).orElseThrow(
+        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
 
@@ -43,7 +43,7 @@ public class BoardService {
 
     @Transactional
     public void deleteBoard(Long boardId){
-        Board board = boardRepository.findById(boardId).orElseThrow(
+        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
         board.deleteBoard();
