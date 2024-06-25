@@ -41,4 +41,12 @@ public class BoardService {
         boardRepository.save(board);
     }
 
+    @Transactional
+    public void deleteBoard(Long boardId){
+        Board board = boardRepository.findById(boardId).orElseThrow(
+            () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
+        );
+        board.deleteBoard();
+    }
+
 }
