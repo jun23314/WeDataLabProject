@@ -1,6 +1,7 @@
 package com.wedatalab.project.domain.Comment.util;
 
 import com.wedatalab.project.domain.Board.entity.Board;
+import com.wedatalab.project.domain.Comment.dto.response.CommentGetResponse;
 import com.wedatalab.project.domain.Comment.entity.Comment;
 import com.wedatalab.project.domain.User.entity.User;
 import lombok.AccessLevel;
@@ -14,6 +15,14 @@ public class CommentMapper {
             .board(board)
             .user(user)
             .content(content)
+            .build();
+    }
+
+    public static CommentGetResponse fromComment(Comment comment) {
+        return CommentGetResponse.builder()
+            .userNickname(comment.getUser().getNickname())
+            .content(comment.getContent())
+            .createdAt(comment.getCreatedAt())
             .build();
     }
 

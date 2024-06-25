@@ -3,8 +3,10 @@ package com.wedatalab.project.domain.Comment.service;
 import com.wedatalab.project.domain.Board.entity.Board;
 import com.wedatalab.project.domain.Board.repository.BoardRepository;
 import com.wedatalab.project.domain.Comment.dto.request.CommentCreateRequest;
+import com.wedatalab.project.domain.Comment.dto.response.CommentGetResponse;
 import com.wedatalab.project.domain.Comment.entity.Comment;
 import com.wedatalab.project.domain.Comment.exception.BoardNotFoundException;
+import com.wedatalab.project.domain.Comment.exception.CommentNotExistException;
 import com.wedatalab.project.domain.Comment.exception.CommentNotFoundException;
 import com.wedatalab.project.domain.Comment.repository.CommentRepository;
 import com.wedatalab.project.domain.Comment.util.CommentMapper;
@@ -12,6 +14,8 @@ import com.wedatalab.project.domain.User.entity.User;
 import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.global.exception.ErrorCode;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +55,26 @@ public class CommentService {
         comment.updateComment(content);
         commentRepository.save(comment);
 
+    }
+
+    @Transactional
+    public List<CommentGetResponse> getComment(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(
+            () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
+        );
+
+        List<Comment> commentList = commentRepository.findAllByBoard(board);
+        if (commentList.isEmpty()) {
+            throw new CommentNotExistException(ErrorCode.COMMENT_NOT_EXIST);
+        }
+
+        List<CommentGetResponse> returnCommentList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            CommentGetResponse commentGetResponse = CommentMapper.fromComment(comment);
+            returnCommentList.add(commentGetResponse);
+        }
+
+        return returnCommentList;
     }
 
 }
