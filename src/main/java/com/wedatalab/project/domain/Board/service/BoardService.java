@@ -10,7 +10,6 @@ import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +22,17 @@ public class BoardService {
 
     @Transactional
     public void createBoard(CreateBoardRequest createBoardRequest) {
+        if (!userRepository.existsByIdAndIsDeletedIsFalse(createBoardRequest.userId())) {
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
+        }
+
         Board board = BoardMapper.toBoard(createBoardRequest);
         boardRepository.save(board);
     }
 
     @Transactional
     public void updateBoard(BoardUpdateRequest boardUpdateRequest, Long boardId) {
-        if (!userRepository.existsById(boardUpdateRequest.userId())) {
+        if (!userRepository.existsByIdAndIsDeletedIsFalse(boardUpdateRequest.userId())) {
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
         }
 
@@ -42,7 +45,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoard(Long boardId){
+    public void deleteBoard(Long boardId) {
         Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
