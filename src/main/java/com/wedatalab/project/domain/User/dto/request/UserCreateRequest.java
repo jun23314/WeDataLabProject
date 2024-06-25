@@ -3,7 +3,7 @@ package com.wedatalab.project.domain.User.dto.request;
 import lombok.Builder;
 
 public record UserCreateRequest(
-    String user_id,
+    String nickname,
     String name,
     Integer age
 ) {
