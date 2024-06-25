@@ -1,6 +1,7 @@
 package com.wedatalab.project.domain.User.util;
 
 import com.wedatalab.project.domain.User.dto.request.UserCreateRequest;
+import com.wedatalab.project.domain.User.dto.response.UserGetResponse;
 import com.wedatalab.project.domain.User.entity.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,14 @@ public class UserMapper {
             .nickname(userCreateRequest.nickname())
             .name(userCreateRequest.name())
             .age(userCreateRequest.age())
+            .build();
+    }
+
+    public static UserGetResponse fromUser(User user) {
+        return UserGetResponse.builder()
+            .name(user.getName())
+            .age(user.getAge())
+            .nickname(user.getNickname())
             .build();
     }
 
