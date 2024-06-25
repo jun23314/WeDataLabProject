@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 public record CreateBoardRequest(
+    Long userId,
     @NotNull
     String title,
     @NotNull
