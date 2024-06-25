@@ -2,14 +2,18 @@ package com.wedatalab.project.domain.Board.entity;
 
 import com.wedatalab.project.domain.User.entity.User;
 import com.wedatalab.project.global.common.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -40,7 +44,12 @@ public class Board extends BaseEntity {
     @JoinTable(name = "board_user")
     private List<User> users = new ArrayList<>();
 
-    @ManyToOne
+    @Comment("comment relation")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
@@ -50,7 +59,7 @@ public class Board extends BaseEntity {
         this.content = content;
     }
 
-    public void updateBoard(String title, String content){
+    public void updateBoard(String title, String content) {
         this.title = title;
         this.content = content;
     }

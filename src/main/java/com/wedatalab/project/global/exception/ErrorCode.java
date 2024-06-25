@@ -14,7 +14,8 @@ public enum ErrorCode {
     BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "보드를 찾을 수 없습니다."),
 
     //comment
-    COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "comment를 찾을 수 없습니다.")
+    COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "comment를 찾을 수 없습니다."),
+    COMMENT_NOT_EXIST(HttpStatus.NO_CONTENT, "존재하는 comment가 없습니다.")
     ;
 
     private final HttpStatus httpStatus;
