@@ -4,6 +4,8 @@ import com.wedatalab.project.domain.User.dto.request.UserCreateRequest;
 import com.wedatalab.project.domain.User.dto.request.UserUpdateRequest;
 import com.wedatalab.project.domain.User.dto.response.UserGetResponse;
 import com.wedatalab.project.domain.User.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("v1/api/user")
 @RequiredArgsConstructor
+@Tag(name = "user api", description = "user 관련 API")
 public class UserRestController {
 
     private final UserService userService;
 
     @PostMapping("/create")
+    @Operation(summary = "user 정보 저장 API", description = "user 정보를 DB에 저장하는 API입니다.")
     public ResponseEntity<String> createUser(
         @RequestBody UserCreateRequest userCreateRequest
     ) {
@@ -30,6 +34,7 @@ public class UserRestController {
     }
 
     @PutMapping("/update")
+    @Operation(summary = "user 정보 update API", description = "user 정보를 update하는 API입니다.")
     public ResponseEntity<String> updateUser(
         @RequestBody UserUpdateRequest userUpdateRequest
     ) {
@@ -38,6 +43,7 @@ public class UserRestController {
     }
 
     @GetMapping("/get/{user_id}")
+    @Operation(summary = "user 정보 get API", description = "user 정보를 DB에서 가져오는 API입니다.")
     public ResponseEntity<UserGetResponse> getUser(
         @PathVariable("user_id") Long userId
     ) {
