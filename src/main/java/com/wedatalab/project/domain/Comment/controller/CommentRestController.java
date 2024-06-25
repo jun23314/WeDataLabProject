@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,8 +53,15 @@ public class CommentRestController {
     ) {
         List<CommentGetResponse> commentList = commentService.getComment(boardId);
         return ResponseEntity.ok(commentList);
+    }
 
-
+    @DeleteMapping("/delete/{comment_id}")
+    @Operation(summary = "comment delete api", description = "comment를 삭제하는 API입니다.")
+    public ResponseEntity<String> deleteComment(
+        @PathVariable("comment_id") Long commentId
+    ) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.ok("comment를 성공적으로 삭제하였습니다.");
     }
 
 }

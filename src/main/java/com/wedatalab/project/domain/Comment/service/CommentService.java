@@ -58,6 +58,11 @@ public class CommentService {
     }
 
     @Transactional
+    public void deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
+    @Transactional
     public List<CommentGetResponse> getComment(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
