@@ -37,12 +37,12 @@ public class User extends BaseEntity {
     private String nickname;
 
     @Comment("comment relation")
-    @OneToMany(mappedBy = "comment")
+    @OneToMany
     List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
 
 
     @Comment("board relation for 작성자")
-    @OneToMany(mappedBy = "board")
+    @OneToMany
     private List<Board> boardList = new ArrayList<>();
 
     @Builder

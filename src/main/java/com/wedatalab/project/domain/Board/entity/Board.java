@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -37,6 +38,9 @@ public class Board extends BaseEntity {
     @ManyToMany
     @JoinTable(name = "board_user")
     private List<User> users = new ArrayList<>();
+
+    @ManyToOne
+    private User user;
 
     @Builder
     public Board(Long id, String title, String content) {
