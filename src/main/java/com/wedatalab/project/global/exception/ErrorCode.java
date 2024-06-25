@@ -12,7 +12,8 @@ public enum ErrorCode {
     MEMBER_WHO_WITHDREW(HttpStatus.BAD_REQUEST, "탈퇴한 회원입니다."),
 
     //Board
-    BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "보드를 찾을 수 없습니다."),
+    BOARD_NOT_FOUND(HttpStatus.NO_CONTENT, "보드를 찾을 수 없습니다."),
+    DELETED_BOARD(HttpStatus.BAD_REQUEST, "삭제된 보드입니다."),
 
     //comment
     COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "comment를 찾을 수 없습니다."),

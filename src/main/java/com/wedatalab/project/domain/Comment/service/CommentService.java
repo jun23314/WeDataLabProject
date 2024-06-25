@@ -8,6 +8,7 @@ import com.wedatalab.project.domain.Comment.entity.Comment;
 import com.wedatalab.project.domain.Comment.exception.BoardNotFoundException;
 import com.wedatalab.project.domain.Comment.exception.CommentNotExistException;
 import com.wedatalab.project.domain.Comment.exception.CommentNotFoundException;
+import com.wedatalab.project.domain.Comment.exception.DeletedBoardException;
 import com.wedatalab.project.domain.Comment.repository.CommentRepository;
 import com.wedatalab.project.domain.Comment.util.CommentMapper;
 import com.wedatalab.project.domain.User.entity.User;
@@ -34,11 +35,11 @@ public class CommentService {
         Long boardId = commentCreateRequest.boardId();
         String content = commentCreateRequest.content();
 
-        User user = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
 
-        Board board = boardRepository.findById(boardId).orElseThrow(
+        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
 
@@ -51,6 +52,9 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
             () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND)
         );
+        if (comment.getBoard().getIsDeleted().equals(true)) {
+            throw new DeletedBoardException(ErrorCode.DELETED_BOARD);
+        }
 
         comment.updateComment(content);
         commentRepository.save(comment);
@@ -64,7 +68,7 @@ public class CommentService {
 
     @Transactional
     public List<CommentGetResponse> getComment(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(
+        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
 

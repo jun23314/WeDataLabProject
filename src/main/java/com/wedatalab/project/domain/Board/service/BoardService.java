@@ -33,12 +33,20 @@ public class BoardService {
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
         }
 
-        Board board = boardRepository.findById(boardId).orElseThrow(
+        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
 
         board.updateBoard(boardUpdateRequest.title(), boardUpdateRequest.content());
         boardRepository.save(board);
+    }
+
+    @Transactional
+    public void deleteBoard(Long boardId){
+        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
+            () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
+        );
+        board.deleteBoard();
     }
 
 }

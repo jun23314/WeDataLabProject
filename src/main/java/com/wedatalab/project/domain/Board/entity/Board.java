@@ -14,6 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -40,6 +41,9 @@ public class Board extends BaseEntity {
     @Column(length = 100, nullable = false)
     private String content;
 
+    @Comment("게시글 삭제 여부")
+    private Boolean isDeleted = false;
+
     @ManyToMany
     @JoinTable(name = "board_user")
     private List<User> users = new ArrayList<>();
@@ -62,5 +66,10 @@ public class Board extends BaseEntity {
     public void updateBoard(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void deleteBoard(){
+        this.isDeleted = true;
+        this.delete(LocalDateTime.now());
     }
 }
