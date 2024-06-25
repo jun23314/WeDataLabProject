@@ -57,4 +57,10 @@ public class User extends BaseEntity {
         this.commentList = commentList;
         this.boardList = boardList;
     }
+
+    public void updateUser(String name, Integer age, String nickname) {
+        this.name = name;
+        this.age = age;
+        this.nickname = nickname;
+    }
 }
