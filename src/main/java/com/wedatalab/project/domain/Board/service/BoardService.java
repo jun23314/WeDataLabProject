@@ -6,34 +6,34 @@ import com.wedatalab.project.domain.Board.entity.Board;
 import com.wedatalab.project.domain.Board.repository.BoardRepository;
 import com.wedatalab.project.domain.Board.util.BoardMapper;
 import com.wedatalab.project.domain.Comment.exception.BoardNotFoundException;
+import com.wedatalab.project.domain.User.exception.UserNotFoundException;
+import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.global.exception.ErrorCode;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void createBoard(CreateBoardRequest createBoardRequest) {
         Board board = BoardMapper.toBoard(createBoardRequest);
-        log.info(board.getTitle());
         boardRepository.save(board);
     }
 
     @Transactional
-    public void updateBoard(BoardUpdateRequest boardUpdateRequest) {
-        log.info(boardUpdateRequest.boardId().toString());
-        Optional<Board> optionalBoard = boardRepository.findById(boardUpdateRequest.boardId());
-        log.info("그니까 이건 되는거야?");
+    public void updateBoard(BoardUpdateRequest boardUpdateRequest, Long boardId) {
+        if (!userRepository.existsById(boardUpdateRequest.userId())) {
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
+        }
 
-        Board board = boardRepository.findById(boardUpdateRequest.boardId()).orElseThrow(
+        Board board = boardRepository.findById(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
 
