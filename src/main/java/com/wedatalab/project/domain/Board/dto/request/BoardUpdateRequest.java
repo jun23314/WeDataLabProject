@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 public record BoardUpdateRequest(
-    Long boardId,
+    Long userId,
     @NotNull
     String title,
     @NotNull
