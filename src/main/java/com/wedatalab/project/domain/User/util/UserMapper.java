@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class UserMapper {
     public static User toUser(UserCreateRequest userCreateRequest) {
         return User.builder()
-            .userId(userCreateRequest.user_id())
+            .nickname(userCreateRequest.nickname())
             .name(userCreateRequest.name())
             .age(userCreateRequest.age())
             .build();
