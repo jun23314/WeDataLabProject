@@ -2,6 +2,7 @@ package com.wedatalab.project.domain.User.service;
 
 import com.wedatalab.project.domain.User.dto.request.UserCreateRequest;
 import com.wedatalab.project.domain.User.dto.request.UserUpdateRequest;
+import com.wedatalab.project.domain.User.dto.response.UserGetResponse;
 import com.wedatalab.project.domain.User.entity.User;
 import com.wedatalab.project.domain.User.exception.AlreadyExistNicknameException;
 import com.wedatalab.project.domain.User.exception.AlreadyExistUserException;
@@ -47,6 +48,14 @@ public class UserService {
 
         user.updateUser(name, age, nickname);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public UserGetResponse getUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+            () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
+        );
+        return UserMapper.fromUser(user);
     }
 
 }
