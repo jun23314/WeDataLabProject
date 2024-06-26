@@ -102,17 +102,20 @@ public class CommentService {
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
 
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
+        Comment comment = commentRepository.findByIdAndIsDeletedIsFalse(commentId).orElseThrow(
             () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_EXIST)
         );
 
-        if (userLikesCommentRepository.existsByUserAndComment(user, comment)) {
+        if (userLikesCommentRepository.existsByUserAndComment(user, comment)) { // 이미 좋아요 누른 경우
             throw new AlreadyLikedCommentException(ErrorCode.ALREADY_LIKED_COMMENT);
         }
 
         UserLikesComment userLikesComment = UserLikesCommentMapper.toUserLikesComment(user,
             comment);
         userLikesCommentRepository.save(userLikesComment);
+
+        comment.updateCommentLikes();
+        commentRepository.save(comment);
     }
 
 }
