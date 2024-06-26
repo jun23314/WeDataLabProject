@@ -56,13 +56,15 @@ public class Comment extends BaseEntity {
     private List<UserLikesComment> userLikesComments = new ArrayList<>();
 
     @Builder
-    public Comment(Long id, String content, int likes, Board board, User user) {
+    public Comment(Long id, String content, int likes, Board board, User user,
+        List<UserLikesComment> userLikesComments) {
         this.id = id;
         this.content = content;
         this.isDeleted = false;
         this.likes = likes;
         this.board = board;
         this.user = user;
+        this.userLikesComments = userLikesComments;
     }
 
     public void updateComment(String content) {
