@@ -14,11 +14,12 @@ public enum ErrorCode {
     //Board
     BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "보드를 찾을 수 없습니다."),
     DELETED_BOARD(HttpStatus.BAD_REQUEST, "삭제된 보드입니다."),
+    ALREADY_LIKED_BOARD(HttpStatus.BAD_REQUEST, "이미 좋아요를 누른 보드입니다."),
 
     //comment
     COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "comment를 찾을 수 없습니다."),
     COMMENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "존재하는 comment가 없습니다."),
-    ALREADY_LIKED_COMMENT(HttpStatus.BAD_REQUEST, "이미 좋아요를 눌렀습니다.")
+    ALREADY_LIKED_COMMENT(HttpStatus.BAD_REQUEST, "이미 좋아요를 누른 comment입니다.")
     ;
 
     private final HttpStatus httpStatus;
