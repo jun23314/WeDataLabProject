@@ -6,6 +6,7 @@ import com.wedatalab.project.domain.Board.entity.Board;
 import com.wedatalab.project.domain.Board.repository.BoardRepository;
 import com.wedatalab.project.domain.Board.util.BoardMapper;
 import com.wedatalab.project.domain.Comment.exception.BoardNotFoundException;
+import com.wedatalab.project.domain.User.entity.User;
 import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.global.exception.ErrorCode;
@@ -21,12 +22,12 @@ public class BoardService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void createBoard(CreateBoardRequest createBoardRequest) {
-        if (!userRepository.existsByIdAndIsDeletedIsFalse(createBoardRequest.userId())) {
-            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
-        }
+    public void createBoard(CreateBoardRequest createBoardRequest, Long userId) {
+        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
+            () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
+        );
 
-        Board board = BoardMapper.toBoard(createBoardRequest);
+        Board board = BoardMapper.toBoard(createBoardRequest, user);
         boardRepository.save(board);
     }
 
