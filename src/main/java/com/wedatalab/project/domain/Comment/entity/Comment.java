@@ -35,6 +35,9 @@ public class Comment extends BaseEntity {
     @org.hibernate.annotations.Comment("comment 삭제 여부")
     private Boolean isDeleted;
 
+    @org.hibernate.annotations.Comment("좋아요 수")
+    private int likes;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
@@ -44,16 +47,21 @@ public class Comment extends BaseEntity {
     private User user;
 
     @Builder
-    public Comment(Long id, String content, Board board, User user) {
+    public Comment(Long id, String content, int likes, Board board, User user) {
         this.id = id;
         this.content = content;
         this.isDeleted = false;
+        this.likes = likes;
         this.board = board;
         this.user = user;
     }
 
     public void updateComment(String content) {
         this.content = content;
+    }
+
+    public void updateCommentLikes(){
+        this.likes = this.likes + 1;
     }
 
     public void deleteComment() {

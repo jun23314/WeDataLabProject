@@ -22,6 +22,7 @@ public class CommentMapper {
         return CommentGetResponse.builder()
             .name(comment.getUser().getName())
             .content(comment.getContent())
+            .likes(comment.getLikes())
             .createdAt(comment.getCreatedAt())
             .build();
     }
