@@ -27,12 +27,13 @@ public class CommentRestController {
 
     private final CommentService commentService;
 
-    @PostMapping("/create")
+    @PostMapping("/create/{board_id}")
     @Operation(summary = "comment 저장 API", description = "board에 대한 user의 comment를 DB에 저장하는 API입니다.")
     public ResponseEntity<String> createComment(
+        @PathVariable("board_id") Long boardId,
         @RequestBody CommentCreateRequest commentCreateRequest
     ) {
-        commentService.createComment(commentCreateRequest);
+        commentService.createComment(commentCreateRequest, boardId);
         return ResponseEntity.ok("코멘트 생성을 완료하였습니다.");
     }
 

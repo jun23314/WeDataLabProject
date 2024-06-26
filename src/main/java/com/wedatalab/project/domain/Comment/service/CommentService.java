@@ -35,9 +35,8 @@ public class CommentService {
     private final UserLikesCommentRepository userLikesCommentRepository;
 
     @Transactional
-    public void createComment(CommentCreateRequest commentCreateRequest) {
+    public void createComment(CommentCreateRequest commentCreateRequest, Long boardId) {
         Long userId = commentCreateRequest.userId();
-        Long boardId = commentCreateRequest.boardId();
         String content = commentCreateRequest.content();
 
         User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
