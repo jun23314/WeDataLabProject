@@ -11,6 +11,8 @@ import com.wedatalab.project.domain.User.entity.User;
 import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.global.exception.ErrorCode;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +78,21 @@ public class BoardService {
         );
 
         return BoardMapper.fromBoard(board);
+    }
+
+    @Transactional
+    public List<BoardGetResponse> getBoardAll() {
+        List<Board> boardList = boardRepository.findAllByIsDeletedIsFalse();
+        if(boardList.isEmpty()) throw new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND);
+
+        List<BoardGetResponse> boardGetResponseList = new ArrayList<>();
+        for(Board board : boardList){
+            BoardGetResponse boardGetResponse = this.getBoardDetail(board.getId());
+            boardGetResponseList.add(boardGetResponse);
+        }
+
+        return boardGetResponseList;
+
     }
 
 }

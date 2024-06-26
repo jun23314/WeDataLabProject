@@ -6,6 +6,7 @@ import com.wedatalab.project.domain.Board.dto.response.BoardGetResponse;
 import com.wedatalab.project.domain.Board.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -72,6 +73,13 @@ public class BoardRestController {
     ) {
         BoardGetResponse boardGetResponse = boardService.getBoardDetail(boardId);
         return ResponseEntity.ok(boardGetResponse);
+    }
+
+    @GetMapping("/get/all")
+    @Operation(summary = "보드 전체 정보 get API", description = "보드 전체 정보를 가져오는 API입니다.")
+    public ResponseEntity<List<BoardGetResponse>> getBoardAll(){
+        List<BoardGetResponse> boardGetResponseList = boardService.getBoardAll();
+        return ResponseEntity.ok(boardGetResponseList);
     }
 
 
