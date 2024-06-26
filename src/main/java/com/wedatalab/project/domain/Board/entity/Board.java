@@ -1,6 +1,7 @@
 package com.wedatalab.project.domain.Board.entity;
 
 import com.wedatalab.project.domain.User.entity.User;
+import com.wedatalab.project.domain.User.entity.UserLikesComment;
 import com.wedatalab.project.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -52,19 +53,26 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
 
+    @Comment("user relation for 작성자")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @org.hibernate.annotations.Comment("user relation for 좋아요")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<UserLikesComment> userLikesComments = new ArrayList<>();
+
     @Builder
     public Board(Long id, String title, String content, List<User> users,
-        List<com.wedatalab.project.domain.Comment.entity.Comment> commentList, User user) {
+        List<com.wedatalab.project.domain.Comment.entity.Comment> commentList, User user,
+        List<UserLikesComment> userLikesComments) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.users = users;
         this.commentList = commentList;
         this.user = user;
+        this.userLikesComments = userLikesComments;
     }
 
     public void updateBoard(String title, String content) {
@@ -72,12 +80,12 @@ public class Board extends BaseEntity {
         this.content = content;
     }
 
-    public void deleteBoard(){
+    public void deleteBoard() {
         this.isDeleted = true;
         this.delete(LocalDateTime.now());
     }
 
-    public void updateUsers(User user){
+    public void updateUsers(User user) {
         this.users.add(user);
     }
 }
