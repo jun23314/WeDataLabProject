@@ -86,4 +86,8 @@ public class Board extends BaseEntity {
     public void updateUsers(User user) {
         this.users.add(user);
     }
+
+    public void updateBoardLikes(){
+        this.likes = this.likes + 1;
+    }
 }
