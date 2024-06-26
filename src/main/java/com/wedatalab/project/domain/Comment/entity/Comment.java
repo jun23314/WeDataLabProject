@@ -3,7 +3,9 @@ package com.wedatalab.project.domain.Comment.entity;
 
 import com.wedatalab.project.domain.Board.entity.Board;
 import com.wedatalab.project.domain.User.entity.User;
+import com.wedatalab.project.domain.User.entity.UserLikesComment;
 import com.wedatalab.project.global.common.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,7 +14,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,6 +50,10 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @org.hibernate.annotations.Comment("user relation for 좋아요")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<UserLikesComment> userLikesComments = new ArrayList<>();
 
     @Builder
     public Comment(Long id, String content, int likes, Board board, User user) {
