@@ -64,7 +64,7 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId) {
         commentRepository.findById(commentId).orElseThrow(
-            () -> new CommentNotExistException(ErrorCode.COMMENT_NOT_EXIST)
+            () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND)
         );
 
         commentRepository.deleteById(commentId);
