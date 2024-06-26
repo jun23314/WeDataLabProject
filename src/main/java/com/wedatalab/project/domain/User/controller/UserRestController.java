@@ -34,12 +34,13 @@ public class UserRestController {
         return ResponseEntity.ok("유저 생성을 완료하였습니다.");
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{user_id}")
     @Operation(summary = "user 정보 update API", description = "user 정보를 update하는 API입니다.")
     public ResponseEntity<String> updateUser(
+        @PathVariable("user_id") Long userId,
         @RequestBody UserUpdateRequest userUpdateRequest
     ) {
-        userService.updateUser(userUpdateRequest);
+        userService.updateUser(userUpdateRequest, userId);
         return ResponseEntity.ok("유저 업데이트를 완료하였습니다.");
     }
 

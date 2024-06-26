@@ -39,12 +39,12 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(UserUpdateRequest userUpdateRequest) {
+    public void updateUser(UserUpdateRequest userUpdateRequest, Long userId) {
         String name = userUpdateRequest.name();
         Integer age = userUpdateRequest.age();
         String email = userUpdateRequest.email();
 
-        User user = userRepository.findByIdAndIsDeletedIsFalse(userUpdateRequest.id()).orElseThrow(
+        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
 
