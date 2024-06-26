@@ -64,4 +64,15 @@ public class CommentRestController {
         return ResponseEntity.ok("comment를 성공적으로 삭제하였습니다.");
     }
 
+    @PostMapping("/post/likes/{comment_id}")
+    @Operation(summary = "커멘트 좋아요 API", description = "사용자가 커멘트에 좋아요를 누를 때 사용되는 API입니다.")
+    public ResponseEntity<String> getCommentLikes(
+        @PathVariable("comment_id") Long commentId,
+        @RequestParam Long userId
+    ) {
+        commentService.getCommentLikes(userId, commentId);
+        return ResponseEntity.ok("커멘트 좋아요를 등록했습니다.");
+
+    }
+
 }

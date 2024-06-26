@@ -59,6 +59,4 @@ public class UserRestController {
         userService.deleteUser(userId);
         return ResponseEntity.ok("user를 성공적으로 삭제했습니다.");
     }
-
-
 }

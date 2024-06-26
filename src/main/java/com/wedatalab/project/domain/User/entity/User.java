@@ -40,26 +40,33 @@ public class User extends BaseEntity {
     private String email;
 
     @Comment("유저 삭제 여부")
-    private Boolean isDeleted = false;
-
-    @Comment("comment relation")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
+    private Boolean isDeleted;
 
     @Comment("board relation for 작성자")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Board> boardList = new ArrayList<>();
 
+    @Comment("comment relation for 작성자")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
+
+    @Comment("comment relation")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserLikesComment> userLikesCommentList = new ArrayList<>();
+
     @Builder
     public User(Long id, String name, Integer age, String email,
+        List<Board> boardList,
         List<com.wedatalab.project.domain.Comment.entity.Comment> commentList,
-        List<Board> boardList) {
+        List<UserLikesComment> userLikesCommentList) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;
-        this.commentList = commentList;
+        this.isDeleted = false;
         this.boardList = boardList;
+        this.commentList = commentList;
+        this.userLikesCommentList = userLikesCommentList;
     }
 
     public void updateUser(String name, Integer age, String email) {
@@ -68,7 +75,7 @@ public class User extends BaseEntity {
         this.email = email;
     }
 
-    public void deleteUser(){
+    public void deleteUser() {
         this.isDeleted = true;
         this.delete(LocalDateTime.now());
     }

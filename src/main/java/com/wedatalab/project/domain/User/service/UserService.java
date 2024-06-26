@@ -11,7 +11,6 @@ import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.domain.User.util.UserMapper;
 import com.wedatalab.project.global.exception.ErrorCode;
-import java.lang.reflect.Member;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,11 +22,12 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+
     @Transactional
     public void createUser(UserCreateRequest userCreateRequest) {
         Optional<User> optionalUser = userRepository.findByEmail(userCreateRequest.email());
         if (optionalUser.isPresent()) {
-            if(optionalUser.get().getIsDeleted().equals(true)){
+            if (optionalUser.get().getIsDeleted().equals(true)) {
                 throw new MemberWhoWithdrewException(ErrorCode.MEMBER_WHO_WITHDREW);
             }
             throw new AlreadyExistUserException(ErrorCode.ALREADY_EXIST_USER);
@@ -70,5 +70,4 @@ public class UserService {
         );
         user.deleteUser();
     }
-
 }
