@@ -1,7 +1,6 @@
 package com.wedatalab.project.domain.Board.entity;
 
 import com.wedatalab.project.domain.User.entity.User;
-import com.wedatalab.project.domain.User.entity.UserLikesComment;
 import com.wedatalab.project.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
