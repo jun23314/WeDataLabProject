@@ -36,10 +36,10 @@ public class CommentRestController {
         return ResponseEntity.ok("코멘트 생성을 완료하였습니다.");
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{comment_id}")
     @Operation(summary = "comment update API", description = "comment를 update하는 API입니다.")
     public ResponseEntity<String> updateComment(
-        @RequestParam Long commentId,
+        @PathVariable("comment_id") Long commentId,
         @RequestParam String content
     ) {
         commentService.updateComment(commentId, content);
