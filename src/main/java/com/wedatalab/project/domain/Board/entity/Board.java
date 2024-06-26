@@ -42,6 +42,9 @@ public class Board extends BaseEntity {
     @Column(length = 100, nullable = false)
     private String content;
 
+    @Comment("Board 좋아요 수")
+    private int likes;
+
     @Comment("게시글 삭제 여부")
     private Boolean isDeleted = false;
 
@@ -65,6 +68,7 @@ public class Board extends BaseEntity {
         this.title = title;
         this.content = content;
         this.users = users;
+        this.likes = 0;
         this.commentList = commentList;
         this.user = user;
     }
