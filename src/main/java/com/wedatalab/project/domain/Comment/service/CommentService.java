@@ -35,9 +35,8 @@ public class CommentService {
     private final UserLikesCommentRepository userLikesCommentRepository;
 
     @Transactional
-    public void createComment(CommentCreateRequest commentCreateRequest) {
+    public void createComment(CommentCreateRequest commentCreateRequest, Long boardId) {
         Long userId = commentCreateRequest.userId();
-        Long boardId = commentCreateRequest.boardId();
         String content = commentCreateRequest.content();
 
         User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
@@ -54,25 +53,26 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long commentId, String content) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
+        Comment comment = commentRepository.findByIdAndIsDeletedIsFalse(commentId).orElseThrow(
             () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND)
         );
+
         if (comment.getBoard().getIsDeleted().equals(true)) {
             throw new DeletedBoardException(ErrorCode.DELETED_BOARD);
         }
 
         comment.updateComment(content);
         commentRepository.save(comment);
-
     }
 
     @Transactional
     public void deleteComment(Long commentId) {
-        commentRepository.findById(commentId).orElseThrow(
+        Comment comment = commentRepository.findByIdAndIsDeletedIsFalse(commentId).orElseThrow(
             () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND)
         );
 
-        commentRepository.deleteById(commentId);
+        comment.deleteComment();
+        commentRepository.save(comment);
     }
 
     @Transactional
@@ -101,17 +101,20 @@ public class CommentService {
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
 
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
+        Comment comment = commentRepository.findByIdAndIsDeletedIsFalse(commentId).orElseThrow(
             () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_EXIST)
         );
 
-        if (userLikesCommentRepository.existsByUserAndComment(user, comment)) {
+        if (userLikesCommentRepository.existsByUserAndComment(user, comment)) { // 이미 좋아요 누른 경우
             throw new AlreadyLikedCommentException(ErrorCode.ALREADY_LIKED_COMMENT);
         }
 
         UserLikesComment userLikesComment = UserLikesCommentMapper.toUserLikesComment(user,
             comment);
         userLikesCommentRepository.save(userLikesComment);
+
+        comment.updateCommentLikes();
+        commentRepository.save(comment);
     }
 
 }

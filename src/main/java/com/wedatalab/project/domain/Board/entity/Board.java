@@ -58,21 +58,15 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @org.hibernate.annotations.Comment("user relation for 좋아요")
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
-    private List<UserLikesComment> userLikesComments = new ArrayList<>();
-
     @Builder
     public Board(Long id, String title, String content, List<User> users,
-        List<com.wedatalab.project.domain.Comment.entity.Comment> commentList, User user,
-        List<UserLikesComment> userLikesComments) {
+        List<com.wedatalab.project.domain.Comment.entity.Comment> commentList, User user) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.users = users;
         this.commentList = commentList;
         this.user = user;
-        this.userLikesComments = userLikesComments;
     }
 
     public void updateBoard(String title, String content) {

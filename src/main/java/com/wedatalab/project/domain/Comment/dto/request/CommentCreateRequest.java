@@ -4,7 +4,6 @@ import lombok.Builder;
 
 public record CommentCreateRequest(
     Long userId,
-    Long boardId,
     String content
 ) {
 

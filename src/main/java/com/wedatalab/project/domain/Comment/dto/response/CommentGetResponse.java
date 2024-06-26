@@ -6,6 +6,8 @@ import lombok.Builder;
 public record CommentGetResponse(
     String name,
     String content,
+
+    int likes,
     LocalDateTime createdAt
 ) {
 
