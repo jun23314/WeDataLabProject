@@ -24,12 +24,13 @@ public class BoardRestController {
     private final BoardService boardService;
 
 
-    @PostMapping("/create")
+    @PostMapping("/create/{user_id}")
     @Operation(summary = "board 저장 API", description = "board를 DB에 저장하는 API입니다.")
     public ResponseEntity<String> createBoard(
+        @PathVariable("user_id") Long userId,
         @RequestBody CreateBoardRequest createBoardRequest
     ) {
-        boardService.createBoard(createBoardRequest);
+        boardService.createBoard(createBoardRequest, userId);
         return ResponseEntity.ok("게시판을 성공적으로 생성하였습니다.");
     }
 

@@ -57,10 +57,14 @@ public class Board extends BaseEntity {
     private User user;
 
     @Builder
-    public Board(Long id, String title, String content) {
+    public Board(Long id, String title, String content, List<User> users,
+        List<com.wedatalab.project.domain.Comment.entity.Comment> commentList, User user) {
         this.id = id;
         this.title = title;
         this.content = content;
+        this.users = users;
+        this.commentList = commentList;
+        this.user = user;
     }
 
     public void updateBoard(String title, String content) {
