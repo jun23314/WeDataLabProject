@@ -1,5 +1,8 @@
 package com.wedatalab.project.domain.User.service;
 
+import com.wedatalab.project.domain.Board.entity.Board;
+import com.wedatalab.project.domain.Board.repository.BoardRepository;
+import com.wedatalab.project.domain.Comment.exception.BoardNotFoundException;
 import com.wedatalab.project.domain.User.dto.request.UserCreateRequest;
 import com.wedatalab.project.domain.User.dto.request.UserUpdateRequest;
 import com.wedatalab.project.domain.User.dto.response.UserGetResponse;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
 
     @Transactional
     public void createUser(UserCreateRequest userCreateRequest) {
@@ -69,6 +73,22 @@ public class UserService {
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
         user.deleteUser();
+    }
+
+    @Transactional
+    public void getLikes(Long userId, Long boardId){
+        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
+            () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
+            () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
+        );
+
+        board.updateUsers(user);
+        boardRepository.save(board);
+
+
     }
 
 }

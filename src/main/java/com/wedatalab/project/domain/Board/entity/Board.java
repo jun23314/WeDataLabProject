@@ -76,4 +76,8 @@ public class Board extends BaseEntity {
         this.isDeleted = true;
         this.delete(LocalDateTime.now());
     }
+
+    public void updateUsers(User user){
+        this.users.add(user);
+    }
 }
