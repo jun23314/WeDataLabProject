@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,5 +54,10 @@ public class Comment extends BaseEntity {
 
     public void updateComment(String content) {
         this.content = content;
+    }
+
+    public void deleteComment() {
+        this.isDeleted = true;
+        this.delete(LocalDateTime.now());
     }
 }

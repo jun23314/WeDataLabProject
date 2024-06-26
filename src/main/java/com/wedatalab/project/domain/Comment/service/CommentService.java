@@ -68,11 +68,12 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long commentId) {
-        commentRepository.findById(commentId).orElseThrow(
+        Comment comment = commentRepository.findByIdAndIsDeletedIsFalse(commentId).orElseThrow(
             () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND)
         );
 
-        commentRepository.deleteById(commentId);
+        comment.deleteComment();
+        commentRepository.save(comment);
     }
 
     @Transactional
