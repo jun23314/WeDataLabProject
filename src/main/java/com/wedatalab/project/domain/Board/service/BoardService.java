@@ -2,6 +2,7 @@ package com.wedatalab.project.domain.Board.service;
 
 import com.wedatalab.project.domain.Board.dto.request.BoardUpdateRequest;
 import com.wedatalab.project.domain.Board.dto.request.CreateBoardRequest;
+import com.wedatalab.project.domain.Board.dto.response.BoardGetResponse;
 import com.wedatalab.project.domain.Board.entity.Board;
 import com.wedatalab.project.domain.Board.repository.BoardRepository;
 import com.wedatalab.project.domain.Board.util.BoardMapper;
@@ -10,6 +11,8 @@ import com.wedatalab.project.domain.User.entity.User;
 import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.global.exception.ErrorCode;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +69,30 @@ public class BoardService {
         board.updateUsers(user);
         board.updateBoardLikes();
         boardRepository.save(board);
+    }
+
+    @Transactional
+    public BoardGetResponse getBoardDetail(Long boardId) {
+        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
+            () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
+        );
+
+        return BoardMapper.fromBoard(board);
+    }
+
+    @Transactional
+    public List<BoardGetResponse> getBoardAll() {
+        List<Board> boardList = boardRepository.findAllByIsDeletedIsFalse();
+        if(boardList.isEmpty()) throw new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND);
+
+        List<BoardGetResponse> boardGetResponseList = new ArrayList<>();
+        for(Board board : boardList){
+            BoardGetResponse boardGetResponse = this.getBoardDetail(board.getId());
+            boardGetResponseList.add(boardGetResponse);
+        }
+
+        return boardGetResponseList;
+
     }
 
 }
