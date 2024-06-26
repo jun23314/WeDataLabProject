@@ -19,6 +19,14 @@ public class CommentMapper {
     }
 
     public static CommentGetResponse fromComment(Comment comment) {
+        if(comment.getUser().getIsDeleted().equals(true)){
+            return CommentGetResponse.builder()
+                .name("삭제된 유저입니다")
+                .content(comment.getContent())
+                .likes(comment.getLikes())
+                .createdAt(comment.getCreatedAt())
+                .build();
+        }
         return CommentGetResponse.builder()
             .name(comment.getUser().getName())
             .content(comment.getContent())
