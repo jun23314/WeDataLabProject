@@ -43,15 +43,15 @@ public class User extends BaseEntity {
     private Boolean isDeleted;
 
     @Comment("board relation for 작성자")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
     private List<Board> boardList = new ArrayList<>();
 
     @Comment("comment relation for 작성자")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
     private List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
 
     @Comment("comment relation")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
     private List<UserLikesComment> userLikesCommentList = new ArrayList<>();
 
     @Builder

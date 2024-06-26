@@ -52,7 +52,7 @@ public class Board extends BaseEntity {
     private List<User> users = new ArrayList<>();
 
     @Comment("comment relation")
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.MERGE)
     private List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
 
     @Comment("user relation for 작성자")
