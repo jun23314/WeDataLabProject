@@ -11,6 +11,7 @@ import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.domain.User.util.UserMapper;
 import com.wedatalab.project.global.exception.ErrorCode;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,8 +48,10 @@ public class UserService {
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
 
-        if (userRepository.existsByEmail(email)) {
-            throw new AlreadyExistMailException(ErrorCode.ALREADY_EXIST_EMAIL);
+        if (!Objects.equals(email, user.getEmail())) {
+            if (userRepository.existsByEmail(email)) {
+                throw new AlreadyExistMailException(ErrorCode.ALREADY_EXIST_EMAIL);
+            }
         }
 
         user.updateUser(name, age, email);
