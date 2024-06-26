@@ -4,6 +4,7 @@ import com.wedatalab.project.domain.Board.dto.request.BoardUpdateRequest;
 import com.wedatalab.project.domain.Board.dto.request.CreateBoardRequest;
 import com.wedatalab.project.domain.Board.dto.response.BoardGetResponse;
 import com.wedatalab.project.domain.Board.entity.Board;
+import com.wedatalab.project.domain.Board.exception.AlreadyLikedBoardException;
 import com.wedatalab.project.domain.Board.repository.BoardRepository;
 import com.wedatalab.project.domain.Board.util.BoardMapper;
 import com.wedatalab.project.domain.Comment.exception.BoardNotFoundException;
@@ -13,6 +14,7 @@ import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.global.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +67,13 @@ public class BoardService {
         Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
+
+        List<User> userList = board.getUsers();
+        for(User u: userList){
+            if(Objects.equals(u, user)){
+                throw new AlreadyLikedBoardException(ErrorCode.ALREADY_LIKED_BOARD);
+            }
+        }
 
         board.updateUsers(user);
         board.updateBoardLikes();
