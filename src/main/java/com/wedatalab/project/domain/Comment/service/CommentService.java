@@ -54,16 +54,16 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long commentId, String content) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
+        Comment comment = commentRepository.findByIdAndIsDeletedIsFalse(commentId).orElseThrow(
             () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_FOUND)
         );
+
         if (comment.getBoard().getIsDeleted().equals(true)) {
             throw new DeletedBoardException(ErrorCode.DELETED_BOARD);
         }
 
         comment.updateComment(content);
         commentRepository.save(comment);
-
     }
 
     @Transactional
