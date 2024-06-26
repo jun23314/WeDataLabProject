@@ -12,8 +12,12 @@ import com.wedatalab.project.domain.Comment.exception.DeletedBoardException;
 import com.wedatalab.project.domain.Comment.repository.CommentRepository;
 import com.wedatalab.project.domain.Comment.util.CommentMapper;
 import com.wedatalab.project.domain.User.entity.User;
+import com.wedatalab.project.domain.User.entity.UserLikesComment;
+import com.wedatalab.project.domain.User.exception.AlreadyLikedCommentException;
 import com.wedatalab.project.domain.User.exception.UserNotFoundException;
+import com.wedatalab.project.domain.User.repository.UserLikesCommentRepository;
 import com.wedatalab.project.domain.User.repository.UserRepository;
+import com.wedatalab.project.domain.User.util.UserLikesCommentMapper;
 import com.wedatalab.project.global.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final UserLikesCommentRepository userLikesCommentRepository;
 
     @Transactional
     public void createComment(CommentCreateRequest commentCreateRequest) {
@@ -88,6 +93,25 @@ public class CommentService {
         }
 
         return returnCommentList;
+    }
+
+    @Transactional
+    public void getCommentLikes(Long userId, Long commentId) {
+        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
+            () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+            () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_EXIST)
+        );
+
+        if (userLikesCommentRepository.existsByUserAndComment(user, comment)) {
+            throw new AlreadyLikedCommentException(ErrorCode.ALREADY_LIKED_COMMENT);
+        }
+
+        UserLikesComment userLikesComment = UserLikesCommentMapper.toUserLikesComment(user,
+            comment);
+        userLikesCommentRepository.save(userLikesComment);
     }
 
 }

@@ -6,7 +6,6 @@ import com.wedatalab.project.domain.User.dto.response.UserGetResponse;
 import com.wedatalab.project.domain.User.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -61,20 +59,4 @@ public class UserRestController {
         userService.deleteUser(userId);
         return ResponseEntity.ok("user를 성공적으로 삭제했습니다.");
     }
-
-    @PostMapping("/post/likes/{board_id}")
-    @Operation(summary = "보드 좋아요 API", description = "사용자가 보드에 좋아요를 누를 때 사용되는 API입니다.")
-    public ResponseEntity<String> getBoardLikes(
-        @RequestParam Long userId,
-        @PathVariable("board_id") Long boardId
-    ){
-        userService.getBoardLikes(userId, boardId);
-        return ResponseEntity.ok("좋아요를 등록했습니다.");
-    }
-
-
-
-
-
-
 }
