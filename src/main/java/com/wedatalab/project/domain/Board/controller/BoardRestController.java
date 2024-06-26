@@ -2,12 +2,14 @@ package com.wedatalab.project.domain.Board.controller;
 
 import com.wedatalab.project.domain.Board.dto.request.BoardUpdateRequest;
 import com.wedatalab.project.domain.Board.dto.request.CreateBoardRequest;
+import com.wedatalab.project.domain.Board.dto.response.BoardGetResponse;
 import com.wedatalab.project.domain.Board.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -61,6 +63,15 @@ public class BoardRestController {
     ) {
         boardService.getBoardLikes(userId, boardId);
         return ResponseEntity.ok("좋아요를 등록했습니다.");
+    }
+
+    @GetMapping("/get/{board_id}")
+    @Operation(summary = "보드 상세 정보 get API", description = "보드 상세 정보를 가져오는 API입니다.")
+    public ResponseEntity<BoardGetResponse> getBoardDetail(
+        @PathVariable("board_id") Long boardId
+    ) {
+        BoardGetResponse boardGetResponse = boardService.getBoardDetail(boardId);
+        return ResponseEntity.ok(boardGetResponse);
     }
 
 
