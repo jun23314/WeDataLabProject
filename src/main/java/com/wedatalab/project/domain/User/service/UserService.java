@@ -11,6 +11,7 @@ import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
 import com.wedatalab.project.domain.User.util.UserMapper;
 import com.wedatalab.project.global.exception.ErrorCode;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,17 +39,19 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(UserUpdateRequest userUpdateRequest) {
+    public void updateUser(UserUpdateRequest userUpdateRequest, Long userId) {
         String name = userUpdateRequest.name();
         Integer age = userUpdateRequest.age();
         String email = userUpdateRequest.email();
 
-        User user = userRepository.findByIdAndIsDeletedIsFalse(userUpdateRequest.id()).orElseThrow(
+        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
 
-        if (userRepository.existsByEmail(email)) {
-            throw new AlreadyExistMailException(ErrorCode.ALREADY_EXIST_EMAIL);
+        if (!Objects.equals(email, user.getEmail())) {
+            if (userRepository.existsByEmail(email)) {
+                throw new AlreadyExistMailException(ErrorCode.ALREADY_EXIST_EMAIL);
+            }
         }
 
         user.updateUser(name, age, email);
