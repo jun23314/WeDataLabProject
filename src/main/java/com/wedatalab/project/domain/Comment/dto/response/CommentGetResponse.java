@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 
 public record CommentGetResponse(
-    String userNickname,
+    String name,
     String content,
     LocalDateTime createdAt
 ) {
