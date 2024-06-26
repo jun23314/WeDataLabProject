@@ -64,6 +64,7 @@ public class BoardService {
         );
 
         board.updateUsers(user);
+        board.updateBoardLikes();
         boardRepository.save(board);
     }
 
