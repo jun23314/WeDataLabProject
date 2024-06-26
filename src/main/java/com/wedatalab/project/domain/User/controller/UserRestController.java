@@ -63,14 +63,16 @@ public class UserRestController {
     }
 
     @PostMapping("/post/likes/{board_id}")
-    @Operation(summary = "좋아요 API", description = "사용자가 보드에 좋아요를 누를 때 사용되는 API입니다.")
-    public ResponseEntity<String> getLikes(
+    @Operation(summary = "보드 좋아요 API", description = "사용자가 보드에 좋아요를 누를 때 사용되는 API입니다.")
+    public ResponseEntity<String> getBoardLikes(
         @RequestParam Long userId,
         @PathVariable("board_id") Long boardId
     ){
-        userService.getLikes(userId, boardId);
+        userService.getBoardLikes(userId, boardId);
         return ResponseEntity.ok("좋아요를 등록했습니다.");
     }
+
+
 
 
 

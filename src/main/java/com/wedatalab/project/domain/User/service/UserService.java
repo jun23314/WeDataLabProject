@@ -76,7 +76,7 @@ public class UserService {
     }
 
     @Transactional
-    public void getLikes(Long userId, Long boardId){
+    public void getBoardLikes(Long userId, Long boardId){
         User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
