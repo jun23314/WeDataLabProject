@@ -53,4 +53,18 @@ public class BoardService {
         board.deleteBoard();
     }
 
+    @Transactional
+    public void getBoardLikes(Long userId, Long boardId) {
+        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
+            () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
+            () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
+        );
+
+        board.updateUsers(user);
+        boardRepository.save(board);
+    }
+
 }
