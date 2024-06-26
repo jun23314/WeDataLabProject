@@ -14,4 +14,14 @@ A. 좋아요
 B. 작성자
 - 작성자는 일대다 relation으로 설정
 - User는 작성한 Board가 필요하기 때문에 매핑 설정
-- Board는 어떤 user가 작성했는지 필요하기 때문에 매핑 설정   
+- Board는 어떤 user가 작성했는지 필요하기 때문에 매핑 설정 
+
+### 2. User-Comment
+A. 좋아요   
+- 좋아요 기능은 다대다 relation이기 때문에 매핑 테이블 사용 (user-comment table)
+- user와 매핑 테이블은 일대다 매핑 설정
+- comment와 매핑 테이블은 일대다 매핑 설정   
+B. 작성자
+- 작성자는 일대다 relation으로 설정
+- User는 작성한 Comment가 필요하기 때문에 매핑 설정
+- Comment는 어떤 User가 작성했는지 필요하기 때문에 매핑 설정   
