@@ -44,7 +44,7 @@ public class CreateBoardServiceTest {
 
     @Nested
     @DisplayName("board()는")
-    class Context_postTrip {
+    class Context_boardCreate {
 
         @Test
         @DisplayName("게시판 정보를 저장할 수 있다.")
