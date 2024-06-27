@@ -25,3 +25,9 @@ B. 작성자
 - 작성자는 일대다 relation으로 설정
 - User는 작성한 Comment가 필요하기 때문에 매핑 설정
 - Comment는 어떤 User가 작성했는지 필요하기 때문에 매핑 설정   
+
+### 3. Comment-Board
+A. 댓글 확인   
+- 댓글을 확인하기 위해 일대다 relation 설정
+- board는 하위 comment들을 봐야 하기 때문에 매핑 설정
+- comment는 어떤 board에 대한 comment인지 알아야 하기 떄문에 매핑 설정
