@@ -52,7 +52,7 @@ public class Comment extends BaseEntity {
     private User user;
 
     @org.hibernate.annotations.Comment("user relation for 좋아요")
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.MERGE)
     private List<UserLikesComment> userLikesComments = new ArrayList<>();
 
     @Builder
