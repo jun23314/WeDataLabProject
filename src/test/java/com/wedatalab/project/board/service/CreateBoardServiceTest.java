@@ -1,11 +1,11 @@
 package com.wedatalab.project.board.service;
 
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.junit.jupiter.api.Assertions.*;
-
-
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.wedatalab.project.domain.Board.dto.request.CreateBoardRequest;
 import com.wedatalab.project.domain.Board.entity.Board;
@@ -49,13 +49,15 @@ public class CreateBoardServiceTest {
         @Test
         @DisplayName("게시판 정보를 저장할 수 있다.")
         void _willSuccess() {
+            Long userId = 1L;
+
             //given
             CreateBoardRequest createBoardRequest = CreateBoardRequest.builder()
                 .title("게시판 테스트")
                 .content("어떤 내용을 넣지?")
                 .build();
 
-            User user = User.builder().id(1L).name("이름").email("이메일").build();
+            User user = User.builder().id(userId).name("이름").email("이메일").build();
             Board board = Board.builder()
                 .id(1L)
                 .user(user)
@@ -63,11 +65,11 @@ public class CreateBoardServiceTest {
                 .content("어떤 내용을 넣지?")
                 .build();
 
-            given(userRepository.findByIdAndIsDeletedIsFalse(1L)).willReturn(Optional.of(user));
+            given(userRepository.findByIdAndIsDeletedIsFalse(userId)).willReturn(Optional.of(user));
             given(boardRepository.save(any(Board.class))).willReturn(board);
 
             // when
-            boardService.createBoard(createBoardRequest, 1L);
+            boardService.createBoard(createBoardRequest, userId);
 
             // then
             verify(boardRepository, times(1)).save(any(Board.class));
@@ -81,10 +83,6 @@ public class CreateBoardServiceTest {
                 .content("어떤 내용을 넣지?")
                 .build();
 
-            given(userService.getUser(any(Long.TYPE))).willThrow(
-                new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
-            );
-
             //when, then
             Throwable exception = assertThrows(UserNotFoundException.class, () -> {
                 boardService.createBoard(createBoardRequest, 1L);
@@ -92,8 +90,6 @@ public class CreateBoardServiceTest {
 
             assertEquals(ErrorCode.USER_NOT_FOUND.getSimpleMessage(), exception.getMessage());
         }
-
-
 
 
     }
