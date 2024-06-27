@@ -14,7 +14,6 @@ import com.wedatalab.project.domain.Board.service.BoardService;
 import com.wedatalab.project.domain.User.entity.User;
 import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
-import com.wedatalab.project.domain.User.service.UserService;
 import com.wedatalab.project.global.exception.ErrorCode;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -38,9 +37,6 @@ public class CreateBoardServiceTest {
 
     @Mock
     private UserRepository userRepository;
-
-    @Mock
-    private UserService userService;
 
     @Nested
     @DisplayName("board()는")
