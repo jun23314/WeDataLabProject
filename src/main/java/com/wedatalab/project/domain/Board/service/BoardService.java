@@ -7,7 +7,7 @@ import com.wedatalab.project.domain.Board.entity.Board;
 import com.wedatalab.project.domain.Board.exception.AlreadyLikedBoardException;
 import com.wedatalab.project.domain.Board.repository.BoardRepository;
 import com.wedatalab.project.domain.Board.util.BoardMapper;
-import com.wedatalab.project.domain.Comment.exception.BoardNotFoundException;
+import com.wedatalab.project.domain.Board.Comment.exception.BoardNotFoundException;
 import com.wedatalab.project.domain.User.entity.User;
 import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
@@ -27,22 +27,23 @@ public class BoardService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void createBoard(CreateBoardRequest createBoardRequest, Long userId) {
-        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
+    public Board createBoard(CreateBoardRequest createBoardRequest, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
 
         Board board = BoardMapper.toBoard(createBoardRequest, user);
         boardRepository.save(board);
+        return board;
     }
 
     @Transactional
     public void updateBoard(BoardUpdateRequest boardUpdateRequest, Long boardId) {
-        if (!userRepository.existsByIdAndIsDeletedIsFalse(boardUpdateRequest.userId())) {
+        if (!userRepository.existsById(boardUpdateRequest.userId())) {
             throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND);
         }
 
-        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
+        Board board = boardRepository.findById(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
 
@@ -52,46 +53,40 @@ public class BoardService {
 
     @Transactional
     public void deleteBoard(Long boardId) {
-        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
+        Board board = boardRepository.findById(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
-        board.deleteBoard();
+
+        boardRepository.delete(board);
     }
 
     @Transactional
-    public void getBoardLikes(Long userId, Long boardId) {
-        User user = userRepository.findByIdAndIsDeletedIsFalse(userId).orElseThrow(
+    public String createBoardLikes(Long userId, Long boardId) {
+        User user = userRepository.findById(userId).orElseThrow(
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
 
-        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
+        Board board = boardRepository.findById(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
 
         List<User> userList = board.getUsers();
-        for(User u: userList){
-            if(Objects.equals(u, user)){
-                throw new AlreadyLikedBoardException(ErrorCode.ALREADY_LIKED_BOARD);
-            }
-        }
-
-        board.updateUsers(user);
-        board.updateBoardLikes();
+        Boolean result = board.updateUsers(userList, user);
         boardRepository.save(board);
+        return result ? "보드 좋아요를 등록하였습니다." : "보드 좋아요를 취소하였습니다.";
     }
 
     @Transactional
     public BoardGetResponse getBoardDetail(Long boardId) {
-        Board board = boardRepository.findByIdAndIsDeletedIsFalse(boardId).orElseThrow(
+        Board board = boardRepository.findById(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
-
         return BoardMapper.fromBoard(board);
     }
 
     @Transactional
     public List<BoardGetResponse> getBoardAll() {
-        List<Board> boardList = boardRepository.findAllByIsDeletedIsFalse();
+        List<Board> boardList = boardRepository.findAll();
         if(boardList.isEmpty()) throw new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND);
 
         List<BoardGetResponse> boardGetResponseList = new ArrayList<>();

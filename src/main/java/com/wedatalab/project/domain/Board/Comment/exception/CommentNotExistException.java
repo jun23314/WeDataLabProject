@@ -1,4 +1,4 @@
-package com.wedatalab.project.domain.Comment.exception;
+package com.wedatalab.project.domain.Board.Comment.exception;
 
 import com.wedatalab.project.global.exception.ApplicationException;
 import com.wedatalab.project.global.exception.ErrorCode;

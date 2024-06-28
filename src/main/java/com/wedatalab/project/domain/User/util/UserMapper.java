@@ -10,19 +10,12 @@ import lombok.NoArgsConstructor;
 public class UserMapper {
 
     public static User toUser(UserCreateRequest userCreateRequest) {
-        return User.builder()
-            .email(userCreateRequest.email())
-            .name(userCreateRequest.name())
-            .age(userCreateRequest.age())
-            .build();
+        return new User(userCreateRequest.name(), userCreateRequest.age(),
+            userCreateRequest.email());
     }
 
     public static UserGetResponse fromUser(User user) {
-        return UserGetResponse.builder()
-            .name(user.getName())
-            .age(user.getAge())
-            .email(user.getEmail())
-            .build();
+        return new UserGetResponse(user.getName(), user.getAge(), user.getEmail());
     }
 
 }

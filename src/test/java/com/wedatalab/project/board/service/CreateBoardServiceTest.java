@@ -48,20 +48,11 @@ public class CreateBoardServiceTest {
             Long userId = 1L;
 
             //given
-            CreateBoardRequest createBoardRequest = CreateBoardRequest.builder()
-                .title("게시판 테스트")
-                .content("어떤 내용을 넣지?")
-                .build();
+            CreateBoardRequest createBoardRequest = new CreateBoardRequest("게시판 테스트", "어떤 내용을 넣지?");
+            User user = new User("이름",0,"이메일");
+            Board board = new Board("게시판 테스트", "어떤 내용을 넣지?", user);
 
-            User user = User.builder().id(userId).name("이름").email("이메일").build();
-            Board board = Board.builder()
-                .id(1L)
-                .user(user)
-                .title("게시판 테스트")
-                .content("어떤 내용을 넣지?")
-                .build();
-
-            given(userRepository.findByIdAndIsDeletedIsFalse(userId)).willReturn(Optional.of(user));
+            given(userRepository.findById(userId)).willReturn(Optional.of(user));
             given(boardRepository.save(any(Board.class))).willReturn(board);
 
             // when
@@ -74,10 +65,8 @@ public class CreateBoardServiceTest {
         @Test
         @DisplayName("회원 정보를 조회할 수 없으면 게시판 정보를 저장할 수 없다.")
         void userNotFound_willFail() {
-            CreateBoardRequest createBoardRequest = CreateBoardRequest.builder()
-                .title("게시판 테스트")
-                .content("어떤 내용을 넣지?")
-                .build();
+            //given
+            CreateBoardRequest createBoardRequest = new CreateBoardRequest("게시판 테스트", "어떤 내용을 넣지?");
 
             //when, then
             Throwable exception = assertThrows(UserNotFoundException.class, () -> {
@@ -86,6 +75,8 @@ public class CreateBoardServiceTest {
 
             assertEquals(ErrorCode.USER_NOT_FOUND.getSimpleMessage(), exception.getMessage());
         }
+
+
 
 
     }

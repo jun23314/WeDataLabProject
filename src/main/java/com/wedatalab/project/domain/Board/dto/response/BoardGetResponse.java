@@ -10,8 +10,4 @@ public record BoardGetResponse(
     int likes,
     LocalDateTime createdAt
 ) {
-
-    @Builder
-    public BoardGetResponse {
-    }
 }

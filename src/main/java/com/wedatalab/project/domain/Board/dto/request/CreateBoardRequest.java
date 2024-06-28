@@ -9,8 +9,4 @@ public record CreateBoardRequest(
     @NotNull
     String content
 ) {
-
-    @Builder
-    public CreateBoardRequest {
-    }
 }

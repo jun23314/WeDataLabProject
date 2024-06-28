@@ -10,8 +10,4 @@ public record BoardUpdateRequest(
     @NotNull
     String content
 ) {
-
-    @Builder
-    public BoardUpdateRequest {
-    }
 }

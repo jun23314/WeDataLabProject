@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
+
     @Setter
     @CreatedDate
     @Comment("생성일")
@@ -24,23 +25,4 @@ public abstract class BaseEntity {
     @LastModifiedDate
     @Comment("업데이트일")
     private LocalDateTime updatedAt;
-
-    @Column(insertable = false)
-    @Comment("삭제일")
-    private LocalDateTime deletedAt;
-
-    protected void delete(LocalDateTime currentTime) {
-        if (deletedAt == null) {
-            deletedAt = currentTime;
-        }
-    }
-
-    public boolean isDeleted() {
-        return deletedAt != null;
-    }
-
-    protected void restore() {
-        deletedAt = null;
-    }
-
 }

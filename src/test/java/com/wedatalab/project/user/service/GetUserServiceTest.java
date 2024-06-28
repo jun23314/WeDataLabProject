@@ -2,14 +2,16 @@ package com.wedatalab.project.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.wedatalab.project.domain.Board.dto.request.CreateBoardRequest;
-import com.wedatalab.project.domain.User.dto.request.UserCreateRequest;
+import com.wedatalab.project.domain.User.dto.request.UserUpdateRequest;
+import com.wedatalab.project.domain.User.dto.response.UserGetResponse;
 import com.wedatalab.project.domain.User.entity.User;
+import com.wedatalab.project.domain.User.exception.AlreadyExistMailException;
 import com.wedatalab.project.domain.User.exception.AlreadyExistUserException;
 import com.wedatalab.project.domain.User.exception.UserNotFoundException;
 import com.wedatalab.project.domain.User.repository.UserRepository;
@@ -27,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @ExtendWith(MockitoExtension.class)
-public class CreateUserServiceTest {
+public class GetUserServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -37,42 +39,38 @@ public class CreateUserServiceTest {
 
     @Nested
     @DisplayName("user()는")
-    class Context_userCreate {
+    class Context_userGet {
 
         @Test
-        @DisplayName("유저 정보를 생성할 수 있다.")
+        @DisplayName("유저 정보를 얻을 수 있다.")
         void _willSuccess() {
             //given
-            UserCreateRequest userCreateRequest = new UserCreateRequest("email", "name", 0);
+            Long userId = 1L;
             User user = new User("name", 0, "email");
 
-            given(userRepository.save(any(User.class))).willReturn(user);
+            given(userRepository.findById(userId)).willReturn(Optional.of(user));
 
-            // when
-            userService.createUser(userCreateRequest);
+            //when, then
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            UserGetResponse userGetResponse = userService.getUser(userId);
 
-            // then
-            verify(userRepository, times(1)).save(any(User.class));
+            assertEquals(userGetResponse.email(), user.getEmail());
+            verify(userRepository).findById(userId);
         }
 
         @Test
-        @DisplayName("이미 가입된 유저는 생성할 수 없다.")
-        void userAlreadyExist_willFail() {
+        @DisplayName("유저가 존재하지 않는 경우 유저 정보를 얻을 수 없다")
+        void userNotFound_willFail(){
             //given
-            UserCreateRequest userCreateRequest = new UserCreateRequest("email", "name", 0);
+            Long userId = 1L;
             User user = new User("name", 0, "email");
 
-            given(userRepository.findByEmail("email")).willReturn(Optional.of(user));
-
             //when, then
-            Throwable exception = assertThrows(AlreadyExistUserException.class, () -> {
-                userService.createUser(userCreateRequest);
+            Throwable exception = assertThrows(UserNotFoundException.class, () -> {
+                userService.getUser(userId);
             });
 
-            assertEquals(ErrorCode.ALREADY_EXIST_USER.getSimpleMessage(), exception.getMessage());
+            assertEquals(ErrorCode.USER_NOT_FOUND.getSimpleMessage(), exception.getMessage());
         }
-
-
-
     }
 }

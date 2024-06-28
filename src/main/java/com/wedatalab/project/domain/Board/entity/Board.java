@@ -1,5 +1,6 @@
 package com.wedatalab.project.domain.Board.entity;
 
+import com.wedatalab.project.domain.Board.Comment.entity.Comments;
 import com.wedatalab.project.domain.User.entity.User;
 import com.wedatalab.project.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
@@ -14,14 +15,15 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -41,34 +43,25 @@ public class Board extends BaseEntity {
     @Column(length = 100, nullable = false)
     private String content;
 
-    @Comment("Board 좋아요 수")
-    private int likes;
-
-    @Comment("게시글 삭제 여부")
-    private Boolean isDeleted = false;
-
     @ManyToMany
     @JoinTable(name = "board_user")
-    private List<User> users = new ArrayList<>();
+    private List<User> users;
 
     @Comment("comment relation")
-    @OneToMany(mappedBy = "board", cascade = CascadeType.MERGE)
-    private List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comments> commentList;
 
     @Comment("user relation for 작성자")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Builder
-    public Board(Long id, String title, String content, List<User> users,
-        List<com.wedatalab.project.domain.Comment.entity.Comment> commentList, User user) {
-        this.id = id;
+    public Board(String title, String content, User user) {
         this.title = title;
         this.content = content;
-        this.users = users;
-        this.likes = 0;
-        this.commentList = commentList;
+        this.users = new ArrayList<>();
+        this.commentList = new ArrayList<>();
         this.user = user;
     }
 
@@ -77,16 +70,12 @@ public class Board extends BaseEntity {
         this.content = content;
     }
 
-    public void deleteBoard() {
-        this.isDeleted = true;
-        this.delete(LocalDateTime.now());
-    }
-
-    public void updateUsers(User user) {
+    public Boolean updateUsers(List<User> users, User user) {
+        if(users.contains(user)) {
+            this.users.remove(user);
+            return false;
+        }
         this.users.add(user);
-    }
-
-    public void updateBoardLikes(){
-        this.likes = this.likes + 1;
+        return true;
     }
 }

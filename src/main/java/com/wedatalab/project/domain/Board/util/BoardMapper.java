@@ -11,31 +11,13 @@ import lombok.NoArgsConstructor;
 public class BoardMapper {
 
     public static Board toBoard(CreateBoardRequest createBoardRequest, User user) {
-        return Board.builder()
-            .user(user)
-            .content(createBoardRequest.content())
-            .title(createBoardRequest.title())
-            .build();
+        return new Board(createBoardRequest.title(), createBoardRequest.content(), user);
     }
 
     public static BoardGetResponse fromBoard(Board board) {
-        if (board.getUser().getIsDeleted().equals(true)) {
-            return BoardGetResponse.builder()
-                .name("삭제된 유저입니다.")
-                .title(board.getTitle())
-                .content(board.getContent())
-                .likes(board.getLikes())
-                .createdAt(board.getCreatedAt())
-                .build();
-        }
+        return new BoardGetResponse(board.getTitle(), board.getContent(), board.getUser().getName(),
+            board.getUsers().size(), board.getCreatedAt());
 
-        return BoardGetResponse.builder()
-            .name(board.getUser().getName())
-            .title(board.getTitle())
-            .content(board.getContent())
-            .likes(board.getLikes())
-            .createdAt(board.getCreatedAt())
-            .build();
     }
 
 }

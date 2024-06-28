@@ -1,6 +1,7 @@
 package com.wedatalab.project.domain.User.entity;
 
 import com.wedatalab.project.domain.Board.entity.Board;
+import com.wedatalab.project.domain.User.dto.request.UserUpdateRequest;
 import com.wedatalab.project.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -9,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Comment("유저 이름")
     @Column(nullable = false, length = 10)
     private String name;
@@ -39,44 +42,15 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String email;
 
-    @Comment("유저 삭제 여부")
-    private Boolean isDeleted;
-
-    @Comment("board relation for 작성자")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    private List<Board> boardList = new ArrayList<>();
-
-    @Comment("comment relation for 작성자")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    private List<com.wedatalab.project.domain.Comment.entity.Comment> commentList = new ArrayList<>();
-
-    @Comment("comment relation")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    private List<UserLikesComment> userLikesCommentList = new ArrayList<>();
-
-    @Builder
-    public User(Long id, String name, Integer age, String email,
-        List<Board> boardList,
-        List<com.wedatalab.project.domain.Comment.entity.Comment> commentList,
-        List<UserLikesComment> userLikesCommentList) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.email = email;
-        this.isDeleted = false;
-        this.boardList = boardList;
-        this.commentList = commentList;
-        this.userLikesCommentList = userLikesCommentList;
-    }
-
-    public void updateUser(String name, Integer age, String email) {
+    public User(String name, Integer age, String email) {
         this.name = name;
         this.age = age;
         this.email = email;
     }
 
-    public void deleteUser() {
-        this.isDeleted = true;
-        this.delete(LocalDateTime.now());
+    public void updateUser(UserUpdateRequest userUpdateRequest) {
+        this.name = userUpdateRequest.name();
+        this.age = userUpdateRequest.age();
+        this.email = userUpdateRequest.email();
     }
 }
