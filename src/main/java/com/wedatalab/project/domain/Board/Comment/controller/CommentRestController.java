@@ -47,9 +47,8 @@ public class CommentRestController {
         @PathVariable("comment_id") Long commentId,
         @RequestParam Long userId
     ) {
-        commentService.createCommentLikes(userId, commentId);
-        return ResponseEntity.ok("커멘트 좋아요를 등록했습니다.");
-
+        String result = commentService.createCommentLikes(userId, commentId);
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping("/{comment_id}")

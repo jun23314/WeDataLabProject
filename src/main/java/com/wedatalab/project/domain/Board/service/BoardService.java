@@ -70,9 +70,9 @@ public class BoardService {
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
 
-        List<User> userList = board.getUsers();
-        Boolean result = board.updateUsers(userList, user);
+        Boolean result = board.updateUsers(user);
         boardRepository.save(board);
+
         return result ? "보드 좋아요를 등록하였습니다." : "보드 좋아요를 취소하였습니다.";
     }
 
@@ -81,6 +81,7 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(
             () -> new BoardNotFoundException(ErrorCode.BOARD_NOT_FOUND)
         );
+
         return BoardMapper.fromBoard(board);
     }
 
@@ -96,7 +97,6 @@ public class BoardService {
         }
 
         return boardGetResponseList;
-
     }
 
 }

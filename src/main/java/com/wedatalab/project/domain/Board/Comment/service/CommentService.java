@@ -47,7 +47,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void createCommentLikes(Long userId, Long commentId) {
+    public String createCommentLikes(Long userId, Long commentId) {
         User user = userRepository.findById(userId).orElseThrow(
             () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)
         );
@@ -55,23 +55,11 @@ public class CommentService {
         Comments comment = commentRepository.findById(commentId).orElseThrow(
             () -> new CommentNotFoundException(ErrorCode.COMMENT_NOT_EXIST)
         );
-        List<Likes> likes = countLikes(user, comment);
-        comment.updateLikes(likes);
+        Boolean result = comment.updateLikes(new Likes(new UserLikesComment(user, comment)));
 
         commentRepository.save(comment);
-    }
 
-    private List<Likes> countLikes(User user, Comments comment){
-        List<Likes> likesList = comment.getLikes();
-        Likes likes = new Likes(new UserLikesComment(user,comment));
-
-        if(likesList.contains(likes)){
-            likesList.remove(likes);
-            return likesList;
-        }
-
-        likesList.add(likes);
-        return likesList;
+        return result ? "보드 좋아요를 등록하였습니다." : "보드 좋아요를 취소하였습니다.";
     }
 
     @Transactional
@@ -96,17 +84,11 @@ public class CommentService {
 
         List<CommentGetResponse> returnCommentList = new ArrayList<>();
         for (Comments comment : commentList) {
-            int likes = getLikesCount(comment);
-            CommentGetResponse commentGetResponse = CommentMapper.fromComment(comment, likes);
+            CommentGetResponse commentGetResponse = CommentMapper.fromComment(comment, comment.countLikes());
             returnCommentList.add(commentGetResponse);
         }
 
         return returnCommentList;
-    }
-
-    private int getLikesCount(Comments comment){
-        List<Likes> likesList = comment.getLikes();
-        return likesList.size();
     }
 
     @Transactional

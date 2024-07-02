@@ -70,8 +70,8 @@ public class Board extends BaseEntity {
         this.content = content;
     }
 
-    public Boolean updateUsers(List<User> users, User user) {
-        if(users.contains(user)) {
+    public Boolean updateUsers(User user) {
+        if(this.users.contains(user)) {
             this.users.remove(user);
             return false;
         }

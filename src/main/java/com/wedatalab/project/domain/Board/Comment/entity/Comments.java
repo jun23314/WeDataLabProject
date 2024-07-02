@@ -58,8 +58,17 @@ public class Comments extends BaseEntity {
         this.content = content;
     }
 
-    public void updateLikes(List<Likes> likes){
-        this.likes = likes;
+    public Boolean updateLikes(Likes like){
+        if(this.likes.contains(like)){
+            this.likes.remove(like);
+            return false;
+        }
+        this.likes.add(like);
+        return true;
+    }
+
+    public int countLikes(){
+        return this.likes.size();
     }
 
 }
